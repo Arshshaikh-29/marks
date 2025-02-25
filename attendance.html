@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: calc(100% - 20px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Marks Tracker</h2>
+        <input type="text" id="studentName" placeholder="Student Name">
+        <input type="email" id="parentEmail" placeholder="Parent Email">
+        <input type="tel" id="parentPhone" placeholder="Parent Phone (with country code)">
+        <input type="number" id="marks" placeholder="Marks">
+        <button onclick="addRecord()">Add Record</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Parent Email</th>
+                    <th>Phone</th>
+                    <th>Marks</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="records"></tbody>
+        </table>
+    </div>
+    <script>
+        function addRecord() {
+            let name = document.getElementById('studentName').value;
+            let email = document.getElementById('parentEmail').value;
+            let phone = document.getElementById('parentPhone').value;
+            let marks = document.getElementById('marks').value;
+            
+            if(name && email && phone && marks) {
+                let table = document.getElementById('records');
+                let row = table.insertRow();
+                row.innerHTML = `<td>${name}</td><td>${email}</td><td>${phone}</td><td>${marks}</td>
+                                <td>
+                                    <button onclick="sendEmail('${email}', '${name}', '${marks}')">Email</button>
+                                    <button onclick="sendSMS('${phone}', '${name}', '${marks}')">SMS</button>
+                                </td>`;
+                
+                localStorage.setItem(name, JSON.stringify({ email, phone, marks }));
+            }
+        }
+        
+        function sendEmail(email, name, marks) {
+            let subject = `Marks Report for ${name}`;
+            let body = `Dear Parent,\n\nYour child ${name} has scored ${marks} marks.\n\nRegards,\nSchool Administration`;
+            
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+        
+        function sendSMS(phone, name, marks) {
+            let message = `Dear Parent, your child ${name} has scored ${marks} marks.`;
+            window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
+        }
+    </script>
+</body>
+</html>
